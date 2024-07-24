@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product List</title>
+    <link rel="stylesheet" href="/styles/styles.css">
+</head>
+<body>
+    <h1>Products</h1>
+    <form id="filterForm" method="get" >
+        <label for="categoryFilter">Filter by Category:</label>
+        <select id="categoryFilter" name="categoryIds" multiple>
+            {{#each categories}}
+                <option value="{{this.id}}" {{#if (includes ../selectedCategories this.id)}}selected{{/if}}>{{this.name}}</option>
+            {{/each}}
+        </select>
+        <button type="submit">Filter</button>
+    </form>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each products}}
+                <tr>
+                    <td>{{this.name}}</td>
+                    <td>{{this.price}}</td>
+                    <td>{{this.category.name}}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    <script>
+        document.getElementById('filterForm').addEventListener('submit', function(event) {
+            const categoryFilter = document.getElementById('categoryFilter');
+            const selectedCategories = Array.from(categoryFilter.selectedOptions).map(option => option.value);
+            const queryString = selectedCategories.map(id => `categoryIds[]=${encodeURIComponent(id)}`).join('&');
+            this.action = `${queryString}`;
+        });
+    </script>
+</body>
+</html>
